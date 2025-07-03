@@ -2,20 +2,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SampleComponent } from './sample.component';
 
 describe('SampleComponent', () => {
-    let component: SampleComponent;
-    let fixture: ComponentFixture<SampleComponent>;
+	let component: SampleComponent;
+	let fixture: ComponentFixture<SampleComponent>;
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [SampleComponent],
-        }).compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [SampleComponent]
+		}).compileComponents();
 
-        fixture = TestBed.createComponent(SampleComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+		fixture = TestBed.createComponent(SampleComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

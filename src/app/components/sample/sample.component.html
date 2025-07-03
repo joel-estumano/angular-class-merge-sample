@@ -1,3 +1,21 @@
-<div [ngClass]="mergeClassCptd()">
-    <p>sample works!</p>
+<div class="grid min-h-60 w-full gap-4 sm:grid-cols-4">
+	<div class="col-span-1 grid place-content-center rounded border p-4">
+		<div [ngClass]="mergeClassCptd()">
+			<p>sample!</p>
+		</div>
+	</div>
+	<div class="flex flex-col gap-4 sm:col-span-3">
+		<div class="bg-muted rounded p-8">
+			<span class="text-muted-foreground text-sm"
+				>Classes internas do component sample
+			</span>
+			<p [innerHTML]="highlightedRemovedClasses()"></p>
+		</div>
+		<div class="bg-muted rounded p-8">
+			<span class="text-muted-foreground text-sm"
+				>Classes mescladas com twMerge e clsx</span
+			>
+			<p [innerHTML]="highlightedAddedClasses()"></p>
+		</div>
+	</div>
 </div>

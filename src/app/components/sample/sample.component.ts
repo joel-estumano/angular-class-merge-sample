@@ -1,19 +1,39 @@
-import { NgClass } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, inject } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { mergeClass } from '../../utils/merge-class.util';
+import { NgClass } from '@angular/common';
 
 @Component({
-    selector: 'app-sample',
-    imports: [NgClass],
-    templateUrl: './sample.component.html',
+	selector: 'app-sample',
+	standalone: true,
+	imports: [NgClass],
+	templateUrl: './sample.component.html'
 })
 export class SampleComponent {
-    twClass = input<string>();
+	twClass = input<string>();
+	sanitizer = inject(DomSanitizer);
 
-    mergeClassCptd = computed(() =>
-        mergeClass(
-            'grid place-content-center size-40 text-foreground font-semibold bg-green-500/50 rounded-full transition ease-in-out duration-300',
-            this.twClass()
-        )
-    );
+	readonly internalClasses = 'grid place-content-center h-32 w-32 text-foreground font-semibold bg-green-500 rounded';
+
+	mergeClassCptd = computed(() => mergeClass(this.internalClasses, this.twClass()));
+
+	highlightedRemovedClasses = computed<SafeHtml>(() => {
+		const original = this.internalClasses.split(/\s+/);
+		const merged = this.mergeClassCptd().split(/\s+/);
+		const removed = original.filter((cls) => !merged.includes(cls));
+
+		const html = original.map((cls) => (removed.includes(cls) ? `<span class="bg-red-500">${cls}</span>` : cls)).join(' ');
+
+		return this.sanitizer.bypassSecurityTrustHtml(html);
+	});
+
+	highlightedAddedClasses = computed<SafeHtml>(() => {
+		const original = this.internalClasses.split(/\s+/);
+		const merged = this.mergeClassCptd().split(/\s+/);
+		const added = merged.filter((cls) => !original.includes(cls));
+
+		const html = merged.map((cls) => (added.includes(cls) ? `<span class="bg-green-500">${cls}</span>` : cls)).join(' ');
+
+		return this.sanitizer.bypassSecurityTrustHtml(html);
+	});
 }
