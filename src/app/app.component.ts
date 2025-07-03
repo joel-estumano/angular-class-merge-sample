@@ -1,11 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { debounceTime } from 'rxjs';
+import { debounceTime, filter } from 'rxjs';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SampleComponent } from './components/sample/sample.component';
 
 @Component({
 	selector: 'app-root',
-	standalone: true,
 	imports: [FormsModule, ReactiveFormsModule, SampleComponent],
 	templateUrl: './app.component.html'
 })
@@ -27,16 +26,21 @@ export class AppComponent {
 		'bg-amber-300 text-black h-20 w-20'
 	];
 
-	protected twClass = signal<string>('');
+	twClass = signal<string>('');
 
-	protected select = new FormControl({
+	select = new FormControl({
 		value: this.twClass(),
 		disabled: false
 	});
 
 	constructor() {
-		this.select.valueChanges.pipe(debounceTime(100)).subscribe((value) => {
-			this.twClass.set(value ?? '');
-		});
+		this.select.valueChanges
+			.pipe(
+				filter((v) => v !== null && v !== undefined && v !== ''),
+				debounceTime(100)
+			)
+			.subscribe((value) => {
+				this.twClass.set(value as string);
+			});
 	}
 }
